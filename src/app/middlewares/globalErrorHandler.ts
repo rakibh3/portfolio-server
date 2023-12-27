@@ -37,6 +37,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
     })
   }
 
+  // Handle Duplicate Validation Error
   if (error.code === 11000) {
     const result = handleDuplicateValidationError(error)
 
