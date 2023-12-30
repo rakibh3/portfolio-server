@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import httpStatus from 'http-status'
@@ -75,12 +76,14 @@ const changePassword = async (
   userData: JwtPayload,
   payload: { currentPassword: string; newPassword: string },
 ) => {
+  // Fetch user information
   const user = await User.isUserExists(userData.username)
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!')
   }
 
+  // Validate current password
   const isPasswordMatch = await User.isPasswordMatched(
     payload?.currentPassword,
     user?.password,
@@ -89,26 +92,45 @@ const changePassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Current Password is incorrect!')
   }
 
-  // // Password history logic:
-  // const passwordHistory = user.passwordHistory || [] // Ensure history exists
-  // const previousPasswords = passwordHistory.slice(-3) // Get last 3 passwords
+  // Check against password history
+  const passwordHistory = user.passwordHistory || []
+  const previousPasswords = passwordHistory?.slice(-2)
 
-  // const isPasswordReused = await checkPassword(
-  //   payload.newPassword,
-  //   previousPasswords,
-  // )
+  async function checkIfPassExists(
+    plainTextPassword: any,
+    previousPasswords: any,
+  ) {
+    for (let i = 0; i < previousPasswords.length; i++) {
+      const isPasswordMatch = await bcrypt.compare(
+        plainTextPassword,
+        previousPasswords[i],
+      )
+      if (isPasswordMatch) {
+        return true
+      }
+    }
+  }
 
-  // if (isPasswordReused) {
-  //   throw new AppError(httpStatus.FORBIDDEN, 'Cannot reuse previous passwords!')
-  // }
+  const isPasswordReused = await checkIfPassExists(
+    payload.newPassword,
+    previousPasswords,
+  )
 
+  if (isPasswordReused) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'New Password is similar to the previous one!',
+    )
+  }
+
+  // Hash the new password
   const newHashedPassword = await bcrypt.hash(
     payload.newPassword,
     Number(config.bcrypt_salt_rounds),
   )
 
-  // passwordHistory.unshift(newHashedPassword) // Add new password to history
-  // passwordHistory.splice(3) // Keep only the last 2 entries
+  // Update password history
+  passwordHistory.unshift(newHashedPassword)
 
   // Update password and history
   const updatedPassword = await User.findOneAndUpdate(
@@ -118,7 +140,8 @@ const changePassword = async (
     },
     {
       password: newHashedPassword,
-      // passwordHistory: [...passwordHistory, user.password],
+      passwordHistory: [...previousPasswords, newHashedPassword],
+      passwordChangedAt: new Date(),
     },
     { new: true },
   )

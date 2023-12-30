@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import httpStatus from 'http-status'
-import jwt, { JwtPayload, decode } from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import AppError from '../error/AppError'
 import { catchAsync } from '../utils/catchAsync'
 import config from '../config'
@@ -31,15 +31,15 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.NOT_FOUND, 'User not found!')
     }
 
-    // if (
-    //   user.passwordChangedAt &&
-    //   User.isJWTIssuedBeforePasswordChanged(
-    //     user.passwordChangedAt,
-    //     iat as number,
-    //   )
-    // ) {
-    //   throw new AppError(httpStatus.UNAUTHORIZED, 'Password has been changed!')
-    // }
+    if (
+      user.passwordChangedAt &&
+      User.isJWTIssuedBeforePasswordChanged(
+        user.passwordChangedAt,
+        iat as number,
+      )
+    ) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Password has been changed!')
+    }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'Not authorized!')

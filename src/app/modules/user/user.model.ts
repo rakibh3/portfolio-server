@@ -25,6 +25,10 @@ const userSchema = new Schema<TUser, UserModel>(
       default: [],
       select: false,
     },
+    passwordChangedAt: {
+      type: Date,
+      select: false,
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],
@@ -42,7 +46,7 @@ userSchema.pre('save', async function (next) {
   const user = this
   const saltRounds = Number(config.bcrypt_salt_rounds)
   user.password = await bcrypt.hash(user.password, saltRounds)
-  // user.passwordHistory?.push(user.password)
+  user.passwordHistory?.push(user.password)
   next()
 })
 
@@ -53,7 +57,7 @@ userSchema.post('save', function (doc, next) {
 
 // Check if the user exists
 userSchema.statics.isUserExists = async function (username: string) {
-  return await User.findOne({ username }).select('+password')
+  return await User.findOne({ username }).select('+password +passwordHistory')
 }
 
 // Check if password is matched with the hash stored in the database
@@ -64,13 +68,13 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword)
 }
 
-// userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
-//   passwordChangedTimestamp: Date,
-//   jwtIssuedTimestamp: number,
-// ) {
-//   const passwordChangedTime =
-//     new Date(passwordChangedTimestamp).getTime() / 1000
-//   return passwordChangedTime > jwtIssuedTimestamp
-// }
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 1000
+  return passwordChangedTime > jwtIssuedTimestamp
+}
 
 export const User = model<TUser, UserModel>('User', userSchema)
