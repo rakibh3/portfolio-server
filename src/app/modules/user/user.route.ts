@@ -7,20 +7,6 @@ import { UserControllers } from './user.controller'
 
 const router = express.Router()
 
-// router.post(
-//   '/create-student',
-//   auth(USER_ROLE.admin),
-//   validateRequest(createStudentValidationSchema),
-//   UserControllers.createStudent,
-// );
-
-// router.post(
-//   '/create-faculty',
-//   auth(USER_ROLE.admin),
-//   validateRequest(createFacultyValidationSchema),
-//   UserControllers.createFaculty,
-// );
-
 router.post(
   '/auth/register',
   // auth(USER_ROLE.admin),

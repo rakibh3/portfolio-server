@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-// import { Model } from 'mongoose'
-// import { USER_ROLE } from './user.constant'
+import { Model } from 'mongoose'
+import { USER_ROLE } from './user.constant'
 
 export type TUser = {
   username: string
@@ -10,18 +10,21 @@ export type TUser = {
   role: 'user' | 'admin'
 }
 
-// export interface UserModel extends Model<TUser> {
-//   //instance methods for checking if the user exist
-//   isUserExistsByCustomId(id: string): Promise<TUser>
-//   //instance methods for checking if passwords are matched
-//   isPasswordMatched(
-//     plainTextPassword: string,
-//     hashedPassword: string,
-//   ): Promise<boolean>
-//   isJWTIssuedBeforePasswordChanged(
-//     passwordChangedTimestamp: Date,
-//     jwtIssuedTimestamp: number,
-//   ): boolean
-// }
+export interface UserModel extends Model<TUser> {
+  // Check if the user exists
+  isUserExists(username: string): Promise<TUser>
 
-// export type TUserRole = keyof typeof USER_ROLE
+  // Compare the plain text password with the hashed password
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean>
+
+  // Check if the JWT was issued before the password was changed
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number,
+  ): boolean
+}
+
+export type TUserRole = keyof typeof USER_ROLE

@@ -1,33 +1,34 @@
 import express from 'express'
-import auth from '../../middlewares/auth'
-import { USER_ROLE } from './../user/user.constant'
-import { validateRequest } from '../../middlewares/validateRequest'
+// import auth from '../../middlewares/auth'
+// import { USER_ROLE } from './../user/user.constant'
+
 import {
-  changePasswordValidationSchema,
+  // changePasswordValidationSchema,
   loginValidationSchema,
-  refreshTokenValidationSchema,
+  // refreshTokenValidationSchema,
 } from './auth.validation'
 import { AuthControllers } from './auth.controller'
+import { validateRequest } from '../../middlewares/validateRequest'
 
 const router = express.Router()
 
 router.post(
-  '/login',
+  '/auth/login',
   validateRequest(loginValidationSchema),
   AuthControllers.loginUser,
 )
 
-router.post(
-  '/change-password',
-  auth(USER_ROLE.admin, USER_ROLE.user),
-  validateRequest(changePasswordValidationSchema),
-  AuthControllers.changePassword,
-)
+// router.post(
+//   '/change-password',
+//   auth(USER_ROLE.admin, USER_ROLE.user),
+//   validateRequest(changePasswordValidationSchema),
+//   AuthControllers.changePassword,
+// )
 
-router.post(
-  '/refresh-token',
-  validateRequest(refreshTokenValidationSchema),
-  AuthControllers.refreshToken,
-)
+// router.post(
+//   '/refresh-token',
+//   validateRequest(refreshTokenValidationSchema),
+//   AuthControllers.refreshToken,
+// )
 
-export const AuthRoutes = router
+export const AuthRoute = router
