@@ -5,7 +5,7 @@ import { sendResponse } from '../../utils/sendResponse'
 
 const createUser = catchAsync(async (req, res) => {
   const { ...payLoad } = req.body
-  console.log(payLoad)
+
   // const passwordHistory = playLoad.passwordHistory || []
 
   // passwordHistory.push(playLoad.password)

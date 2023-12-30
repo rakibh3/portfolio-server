@@ -8,7 +8,6 @@ export type TUser = {
   email: string
   password: string
   passwordHistory?: string[]
-  // passwordChangedAt?: Date
   role: 'user' | 'admin'
 }
 

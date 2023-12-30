@@ -13,12 +13,12 @@ const loginUser = async (payload: TLoginUser) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!')
   }
-  console.log(user.username, user.createdAt, user.updatedAt)
 
   const isPasswordCorrect = await User.isPasswordMatched(
     payload?.password,
     user?.password,
   )
+
   if (!isPasswordCorrect) {
     throw new AppError(httpStatus.FORBIDDEN, 'Password is incorrect!')
   }
@@ -55,8 +55,15 @@ const loginUser = async (payload: TLoginUser) => {
   //   config.jwt_refresh_expires_in as string,
   // )
 
+  const userWithoutPassword = {
+    _id: user?._id,
+    username: user?.username,
+    email: user?.email,
+    role: user?.role,
+  }
+
   return {
-    user,
+    user: userWithoutPassword,
     accessToken,
     // refreshToken,
     // needsPasswordChange: user?.needsPasswordChange,

@@ -34,7 +34,7 @@ const courseSchema = new Schema<TCourse>(
     details: { type: DetailsSchema, required: true },
     createdBy: { type: String, required: true, ref: 'User' },
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 )
 
 // Pre-save middleware to convert specified string fields to lowercase
