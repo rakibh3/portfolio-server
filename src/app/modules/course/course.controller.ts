@@ -7,7 +7,7 @@ import { catchAsync } from '../../utils/catchAsync'
 //  Creates a new course
 const createCourse = catchAsync(async (req, res) => {
   const { ...course } = req.body
-  console.log(course)
+
   const userInfo = req.user
 
   const durationInWeeks = calculateDurationInWeeks(

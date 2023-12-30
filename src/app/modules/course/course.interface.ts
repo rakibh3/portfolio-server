@@ -1,4 +1,4 @@
-// import mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 export type TTag = {
   name: string
@@ -22,5 +22,5 @@ export type TCourse = {
   provider: string
   durationInWeeks: number
   details: TDetails
-  createdBy: string
+  createdBy: mongoose.Types.ObjectId
 }

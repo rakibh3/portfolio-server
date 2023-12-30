@@ -3,8 +3,8 @@ import { TCategory } from './category.interface'
 
 const categorySchema = new Schema<TCategory>(
   {
-    createdBy: { type: String, required: true, ref: 'User' },
     name: { type: String, required: true, unique: true },
+    createdBy: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   },
   { timestamps: true, versionKey: false },
 )
