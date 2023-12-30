@@ -7,8 +7,8 @@ type TMeta = {
 }
 
 type TResponse<T> = {
-  statusCode: number
   success: boolean
+  statusCode: number
   message?: string
   meta?: TMeta
   data: T

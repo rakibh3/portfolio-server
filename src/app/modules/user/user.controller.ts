@@ -1,49 +1,28 @@
-import httpStatus from 'http-status';
-import catchAsync from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
-import { UserServices } from './user.service';
+import httpStatus from 'http-status'
+import { UserServices } from './user.service'
+import { catchAsync } from '../../utils/catchAsync'
+import { sendResponse } from '../../utils/sendResponse'
 
-const createStudent = catchAsync(async (req, res) => {
-  const { password, student: studentData } = req.body;
+const createUser = catchAsync(async (req, res) => {
+  const { ...playLoad } = req.body
 
-  const result = await UserServices.createStudentIntoDB(password, studentData);
+  const result = await UserServices.createUserIntoDatabase(playLoad)
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Student is created succesfully',
-    data: result,
-  });
-});
-
-const createFaculty = catchAsync(async (req, res) => {
-  const { password, faculty: facultyData } = req.body;
-
-  const result = await UserServices.createFacultyIntoDB(password, facultyData);
+  let message
+  if (result?.role === 'user') {
+    message = 'User registered successfully'
+  } else if (result?.role === 'admin') {
+    message = 'Admin registered successfully'
+  }
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
-    message: 'Faculty is created succesfully',
+    message,
     data: result,
-  });
-});
-
-const createAdmin = catchAsync(async (req, res) => {
-  const { password, admin: adminData } = req.body;
-
-  const result = await UserServices.createAdminIntoDB(password, adminData);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Admin is created succesfully',
-    data: result,
-  });
-});
+  })
+})
 
 export const UserControllers = {
-  createStudent,
-  createFaculty,
-  createAdmin,
-};
+  createUser,
+}
