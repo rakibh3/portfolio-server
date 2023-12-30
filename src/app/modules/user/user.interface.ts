@@ -3,10 +3,12 @@ import { Model } from 'mongoose'
 import { USER_ROLE } from './user.constant'
 
 export type TUser = {
+  _id?: string
   username: string
   email: string
   password: string
-  passwordChangedAt?: Date
+  passwordHistory?: string[]
+  // passwordChangedAt?: Date
   role: 'user' | 'admin'
 }
 

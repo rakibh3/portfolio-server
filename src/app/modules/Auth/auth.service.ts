@@ -1,12 +1,11 @@
-// import bcrypt from 'bcrypt'
-// import jwt, { JwtPayload } from 'jsonwebtoken';
-// import config from '../../config'
-
-// import { createToken } from './auth.utils'
+import bcrypt from 'bcrypt'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import httpStatus from 'http-status'
 import AppError from '../../error/AppError'
 import { User } from '../user/user.model'
 import { TLoginUser } from './auth.interface'
+import config from '../../config'
+// import { checkPassword } from '../../middlewares/checkExistsPass'
 
 // Login user
 const loginUser = async (payload: TLoginUser) => {
@@ -23,13 +22,21 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, 'Password is incorrect!')
   }
 
-  return user
-  // //create token and sent to the  client
-
-  // const jwtPayload = {
-  //   userId: user.id,
-  //   role: user.role,
+  // Create a token that will be sent to the client
+  // {
+  //   "_id": "54321abcde67890fghij", // User's _id
+  //   "role": "user",               // User's role
+  //   "email": "john@example.com",  // User's email
+  //   "iat": 1626619535,            // Issued At (timestamp)
+  //   "exp": 1626623535             // Expiration (timestamp)
   // }
+
+  const jwtPayload = {
+    _id: user?._id,
+    username: user.username,
+    role: user.role,
+    email: user.email,
+  }
 
   // const accessToken = createToken(
   //   jwtPayload,
@@ -37,70 +44,79 @@ const loginUser = async (payload: TLoginUser) => {
   //   config.jwt_access_expires_in as string,
   // )
 
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '10d',
+  })
+
   // const refreshToken = createToken(
   //   jwtPayload,
   //   config.jwt_refresh_secret as string,
   //   config.jwt_refresh_expires_in as string,
   // )
 
-  // return {
-  //   accessToken,
-  //   refreshToken,
-  //   needsPasswordChange: user?.needsPasswordChange,
-  // }
+  return {
+    user,
+    accessToken,
+    // refreshToken,
+    // needsPasswordChange: user?.needsPasswordChange,
+  }
 }
 
-// const changePassword = async (
-//   userData: JwtPayload,
-//   payload: { oldPassword: string; newPassword: string },
-// ) => {
-//   // checking if the user is exist
-//   const user = await User.isUserExistsByCustomId(userData.userId)
+// Change password
+const changePassword = async (
+  userData: JwtPayload,
+  payload: { currentPassword: string; newPassword: string },
+) => {
+  const user = await User.isUserExists(userData.username)
 
-//   if (!user) {
-//     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !')
-//   }
-//   // checking if the user is already deleted
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!')
+  }
 
-//   const isDeleted = user?.isDeleted
+  const isPasswordMatch = await User.isPasswordMatched(
+    payload?.currentPassword,
+    user?.password,
+  )
+  if (!isPasswordMatch) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Current Password is incorrect!')
+  }
 
-//   if (isDeleted) {
-//     throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !')
-//   }
+  // // Password history logic:
+  // const passwordHistory = user.passwordHistory || [] // Ensure history exists
+  // const previousPasswords = passwordHistory.slice(-3) // Get last 3 passwords
 
-//   // checking if the user is blocked
+  // const isPasswordReused = await checkPassword(
+  //   payload.newPassword,
+  //   previousPasswords,
+  // )
 
-//   const userStatus = user?.status
+  // if (isPasswordReused) {
+  //   throw new AppError(httpStatus.FORBIDDEN, 'Cannot reuse previous passwords!')
+  // }
 
-//   if (userStatus === 'blocked') {
-//     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !')
-//   }
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  )
 
-//   //checking if the password is correct
+  // passwordHistory.unshift(newHashedPassword) // Add new password to history
+  // passwordHistory.splice(3) // Keep only the last 2 entries
 
-//   if (!(await User.isPasswordMatched(payload.oldPassword, user?.password)))
-//     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched')
+  // Update password and history
+  const updatedPassword = await User.findOneAndUpdate(
+    {
+      _id: userData._id,
+      role: userData.role,
+    },
+    {
+      password: newHashedPassword,
+      // passwordHistory: [...passwordHistory, user.password],
+    },
+    { new: true },
+  )
 
-//   //hash new password
-//   const newHashedPassword = await bcrypt.hash(
-//     payload.newPassword,
-//     Number(config.bcrypt_salt_rounds),
-//   )
-
-//   await User.findOneAndUpdate(
-//     {
-//       id: userData.userId,
-//       role: userData.role,
-//     },
-//     {
-//       password: newHashedPassword,
-//       needsPasswordChange: false,
-//       passwordChangedAt: new Date(),
-//     },
-//   )
-
-//   return null
-// }
+  return updatedPassword
+}
 
 // const refreshToken = async (token: string) => {
 //   // checking if the given token is valid
@@ -156,6 +172,6 @@ const loginUser = async (payload: TLoginUser) => {
 
 export const AuthServices = {
   loginUser,
-  // changePassword,
+  changePassword,
   // refreshToken,
 }

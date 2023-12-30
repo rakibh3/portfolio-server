@@ -20,8 +20,10 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
       select: false,
     },
-    passwordChangedAt: {
-      type: Date,
+    passwordHistory: {
+      type: [String],
+      default: [],
+      select: false,
     },
     role: {
       type: String,
@@ -39,6 +41,7 @@ userSchema.pre('save', async function (next) {
   const user = this
   const saltRounds = Number(config.bcrypt_salt_rounds)
   user.password = await bcrypt.hash(user.password, saltRounds)
+  // user.passwordHistory?.push(user.password)
   next()
 })
 

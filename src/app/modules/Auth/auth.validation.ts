@@ -5,12 +5,12 @@ export const loginValidationSchema = z.object({
   password: z.string({ required_error: 'Password is required' }),
 })
 
-// export const changePasswordValidationSchema = z.object({
-//   oldPassword: z.string({
-//     required_error: 'Old password is required',
-//   }),
-//   newPassword: z.string({ required_error: 'Password is required' }),
-// })
+export const changePasswordValidationSchema = z.object({
+  currentPassword: z.string({
+    required_error: 'Current password is required!',
+  }),
+  newPassword: z.string({ required_error: 'Password is required' }),
+})
 
 // export const refreshTokenValidationSchema = z.object({
 //   refreshToken: z.string({

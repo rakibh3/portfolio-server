@@ -4,9 +4,21 @@ import { catchAsync } from '../../utils/catchAsync'
 import { sendResponse } from '../../utils/sendResponse'
 
 const createUser = catchAsync(async (req, res) => {
-  const { ...playLoad } = req.body
+  const { ...payLoad } = req.body
+  console.log(payLoad)
+  // const passwordHistory = playLoad.passwordHistory || []
 
-  const result = await UserServices.createUserIntoDatabase(playLoad)
+  // passwordHistory.push(playLoad.password)
+
+  // Store password in password history
+  //   const passwordHistory = responseData.passwordHistory || [];
+  //   passwordHistory.push(payload.password);
+  //   responseData.passwordHistory = passwordHistory;
+
+  //   return responseData;
+  // };
+
+  const result = await UserServices.createUserIntoDatabase(payLoad)
 
   let message
   if (result?.role === 'user') {
