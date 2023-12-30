@@ -9,7 +9,11 @@ import { catchAsync } from '../../utils/catchAsync'
 // Creates a new category
 const createCategory = catchAsync(async (req, res) => {
   const { ...name } = req.body
-  const result = await CategoryServices.createCategoryIntoDatabase(name)
+  const { _id } = req.user
+  const result = await CategoryServices.createCategoryIntoDatabase({
+    ...name,
+    createdBy: _id,
+  })
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,

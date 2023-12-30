@@ -7,6 +7,8 @@ import { catchAsync } from '../../utils/catchAsync'
 //  Creates a new course
 const createCourse = catchAsync(async (req, res) => {
   const { ...course } = req.body
+  console.log(course)
+  const userInfo = req.user
 
   const durationInWeeks = calculateDurationInWeeks(
     course.startDate,
@@ -16,6 +18,7 @@ const createCourse = catchAsync(async (req, res) => {
   const result = await CourseServices.createCourseIntoDatabase({
     ...course,
     durationInWeeks,
+    createdBy: userInfo?._id,
   })
 
   sendResponse(res, {

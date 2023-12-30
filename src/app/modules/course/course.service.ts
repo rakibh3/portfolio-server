@@ -25,6 +25,7 @@ const getAllCourseFromDatabase = async (query: Record<string, any>) => {
     .sort({ [sortBy]: sortOrder })
     .skip((page - 1) * limit)
     .limit(limit)
+    .populate('createdBy')
 
   const totalFilteredCourses = await Course.countDocuments(filterBy)
 

@@ -1,3 +1,5 @@
+// import mongoose from 'mongoose'
+
 export type TTag = {
   name: string
   isDeleted: boolean
@@ -20,4 +22,5 @@ export type TCourse = {
   provider: string
   durationInWeeks: number
   details: TDetails
+  createdBy: string
 }

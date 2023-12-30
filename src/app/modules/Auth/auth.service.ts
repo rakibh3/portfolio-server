@@ -13,6 +13,7 @@ const loginUser = async (payload: TLoginUser) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found!')
   }
+  console.log(user.username, user.createdAt, user.updatedAt)
 
   const isPasswordCorrect = await User.isPasswordMatched(
     payload?.password,

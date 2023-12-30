@@ -19,19 +19,23 @@ const DetailsSchema = new Schema<TDetails>(
 )
 
 // Creating Mongoose schema
-const courseSchema = new Schema<TCourse>({
-  title: { type: String, required: true, unique: true },
-  instructor: { type: String, required: true },
-  categoryId: { type: String, required: true, ref: 'Category' },
-  price: { type: Number, required: true },
-  tags: { type: [TagSchema], required: true },
-  startDate: { type: String, required: true },
-  endDate: { type: String, required: true },
-  language: { type: String, required: true },
-  provider: { type: String, required: true },
-  durationInWeeks: { type: Number, required: true },
-  details: { type: DetailsSchema, required: true },
-})
+const courseSchema = new Schema<TCourse>(
+  {
+    title: { type: String, required: true, unique: true },
+    instructor: { type: String, required: true },
+    categoryId: { type: String, required: true, ref: 'Category' },
+    price: { type: Number, required: true },
+    tags: { type: [TagSchema], required: true },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: true },
+    language: { type: String, required: true },
+    provider: { type: String, required: true },
+    durationInWeeks: { type: Number, required: true },
+    details: { type: DetailsSchema, required: true },
+    createdBy: { type: String, required: true, ref: 'User' },
+  },
+  { timestamps: true },
+)
 
 // Pre-save middleware to convert specified string fields to lowercase
 courseSchema.pre('save', async function (this: TCourse, next) {

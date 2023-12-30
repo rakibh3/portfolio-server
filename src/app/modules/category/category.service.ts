@@ -9,7 +9,7 @@ const createCategoryIntoDatabase = async (payLoad: TCategory) => {
 
 // Get all categories from the database
 const getAllCategoryFromDatabase = async () => {
-  const result = await Category.find()
+  const result = await Category.find().populate('createdBy')
   return result
 }
 
