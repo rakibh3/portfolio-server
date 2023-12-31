@@ -7,13 +7,13 @@ Step-by-step instructions on how to install the application.
 - Clone the repository:
 
 ```
-git clone git@github.com:Porgramming-Hero-web-course/l2b2a3-course-review-rakibh3.git
+git@github.com:Porgramming-Hero-web-course/l2b2a4-course-review-with-auth-rakibh3.git
 ```
 
 - Navigate to the project directory:
 
 ```
-cd l2b2a3-course-review-rakibh3
+cd l2b2a4-course-review-with-auth-rakibh3
 ```
 
 - Install dependencies:
@@ -28,8 +28,10 @@ Create a .env file in the root directory and add necessary environment variables
 
 ```
 DATABASE_URL = your_database_connection_string
-
 PORT = 5000
+BCRYPT_SALT_ROUNDS = 12
+JWT_ACCESS_SECRET = your_jwt_access_secret
+JWT_ACCESS_EXPIRES_IN = 1d
 ```
 
 ## Usage
