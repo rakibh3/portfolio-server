@@ -100,7 +100,7 @@ const updateCourseIntoDatabase = async (
 
   const result = await Course.findByIdAndUpdate(courseId, modifiedData, {
     new: true,
-  })
+  }).populate('createdBy', { createdAt: 0, updatedAt: 0 })
 
   return result
 }

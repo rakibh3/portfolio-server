@@ -6,6 +6,7 @@ import { catchAsync } from '../utils/catchAsync'
 import config from '../config'
 import { User } from '../modules/user/user.model'
 import { TUserRole } from '../modules/user/user.interface'
+import { unauthorizedErrorResponse } from '../error/unauthorizeError'
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -38,11 +39,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
         iat as number,
       )
     ) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'Password has been changed!')
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Password changed!')
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'Not authorized!')
+      res.status(httpStatus.UNAUTHORIZED).json(unauthorizedErrorResponse)
+      return
     }
 
     req.user = decoded as JwtPayload

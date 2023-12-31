@@ -9,7 +9,7 @@ const createReviewIntoDatabase = async (review: TReview) => {
 
 const getAllReviewsWithCoursesFromDatabase = async (courseId: string) => {
   const course = await Course.findById(courseId, { __v: 0 })
-  const reviews = await Review.find({ courseId }, { _id: 0, __v: 0 }).populate(
+  const reviews = await Review.find({ courseId }, { __v: 0 }).populate(
     'createdBy',
     { createdAt: 0, updatedAt: 0, __v: 0 },
   )

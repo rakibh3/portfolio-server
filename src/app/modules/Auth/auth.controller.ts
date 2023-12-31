@@ -2,7 +2,6 @@ import httpStatus from 'http-status'
 import { catchAsync } from '../../utils/catchAsync'
 import { AuthServices } from './auth.service'
 import { sendResponse } from '../../utils/sendResponse'
-// import config from '../../config'
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body)
@@ -39,20 +38,7 @@ const changePassword = catchAsync(async (req, res) => {
   })
 })
 
-// const refreshToken = catchAsync(async (req, res) => {
-//   const { refreshToken } = req.cookies
-//   const result = await AuthServices.refreshToken(refreshToken)
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Access token is retrieved succesfully!',
-//     data: result,
-//   })
-// })
-
 export const AuthControllers = {
   loginUser,
   changePassword,
-  // refreshToken,
 }

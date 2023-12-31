@@ -6,8 +6,12 @@ import { catchAsync } from '../../utils/catchAsync'
 // Create a review for a course
 const createReview = catchAsync(async (req, res) => {
   const { ...review } = req.body
+  const userInfo = req.user
 
-  const result = await ReviewService.createReviewIntoDatabase(review)
+  const result = await ReviewService.createReviewIntoDatabase({
+    ...review,
+    createdBy: userInfo?._id,
+  })
 
   sendResponse(res, {
     success: true,
