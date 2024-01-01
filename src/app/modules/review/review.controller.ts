@@ -29,7 +29,7 @@ const getAllReviews = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    message: 'Course and Reviews retrieved successfully',
+    message: 'Course and Reviews retrieved successfully!',
     statusCode: httpStatus.OK,
     data: result,
   })
