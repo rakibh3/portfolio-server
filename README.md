@@ -7,13 +7,13 @@ Step-by-step instructions on how to install the application.
 - Clone the repository:
 
 ```
-git@github.com:Porgramming-Hero-web-course/l2b2a4-course-review-with-auth-rakibh3.git
+https://github.com/rakibh3/review-with-auth.git
 ```
 
 - Navigate to the project directory:
 
 ```
-cd l2b2a4-course-review-with-auth-rakibh3
+cd review-with-auth
 ```
 
 - Install dependencies:
