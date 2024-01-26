@@ -1,5 +1,5 @@
-import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
+import express, { Application, Request, Response } from 'express'
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler'
 import { notFoundRoute } from './app/middlewares/notFoundRoute'
 import router from './app/routes'
@@ -17,7 +17,7 @@ app.use('/api', router)
 // Create handler for GET request /
 const getRootController = (req: Request, res: Response) => {
   // Send response text
-  res.send('Hello Express JS!')
+  res.send('Express JS Working Well!')
 }
 
 // Route handler for /
