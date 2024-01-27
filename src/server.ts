@@ -10,7 +10,7 @@ const startServer = async () => {
     // Start Express server
     app.listen(config.port, () => {
       // eslint-disable-next-line no-console
-      console.log(`Server is running on port: ${config.port}`)
+      console.log(`Server running on port: ${config.port}`)
     })
   } catch (error) {
     // eslint-disable-next-line no-console
