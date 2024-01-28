@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
 import { catchAsync } from '../../utils/catchAsync'
-import { AuthServices } from './auth.service'
 import { sendResponse } from '../../utils/sendResponse'
+import { AuthServices } from './auth.service'
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body)
@@ -33,7 +33,7 @@ const changePassword = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Password changed successfully',
+    message: 'Password changed successfully!',
     data: result,
   })
 })
