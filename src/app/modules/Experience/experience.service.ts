@@ -13,8 +13,25 @@ const getAllExperiencesFromDatabase = async () => {
   return result
 }
 
+// Update an experience from the database
+const updateExperienceFromDatabase = async (
+  id: string,
+  payLoad: TExperience,
+) => {
+  const result = await Experience.findByIdAndUpdate(id, payLoad, { new: true })
+  return result
+}
+
+// Delete an experience from the database
+const deleteExperienceFromDatabase = async (id: string) => {
+  const result = await Experience.findByIdAndDelete(id)
+  return result
+}
+
 // Exports all services
 export const ExperienceServices = {
   createExperienceIntoDatabase,
   getAllExperiencesFromDatabase,
+  updateExperienceFromDatabase,
+  deleteExperienceFromDatabase,
 }

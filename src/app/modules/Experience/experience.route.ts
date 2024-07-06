@@ -21,4 +21,16 @@ router.get(
   ExperienceController.getAllExperiences,
 )
 
+router.put(
+  '/experience/:id',
+  // auth(USER_ROLE.admin),
+  ExperienceController.updateExperience,
+)
+
+router.delete(
+  '/experience/:id',
+  // auth(USER_ROLE.admin),
+  ExperienceController.deleteExperience,
+)
+
 export const ExperienceRoute = router
